@@ -1,0 +1,139 @@
+body {
+    background-image: url('Img1.png');
+    background-repeat: repeat;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-image: Img1.png;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 550px;
+    padding-bottom: 150px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    margin-top: 0px;
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+h3 {
+   font-size: 150%; 
+   text-align: center;
+   border-style: double; border-radius: 5px; 
+   margin-top: 0px;
+   margin-right: 120px;
+   margin-left: 125px; 
+   padding : 5px; 
+}
+
+#typeSelect {
+  display: block;
+  margin-right: 120px;
+  margin-left: 125px; 
+  width: 50%;
+  margin: 10px auto 20px auto;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.input-group {
+    margin-bottom: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+
+}
+
+.flex-container {
+  margin-left: 110px;
+  gap: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 10 auto;
+}
+
+.flex-container span { 
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0 7px;
+  vertical-align: middle;
+}
+
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="number"] {
+    width: 7%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -moz-appearance: textfield;
+}
+
+button {
+    display: block;
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    padding: 10px;
+    background-color: #36CCFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2CB1DE;
+}
+
+#result-area {
+    margin-top: 2px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+#result-area h2 {
+    text-align: left;
+    color: #212121;
+}
+
+#solution-display {
+    margin-left : 30px;
+    white-space: pre-wrap; 
+    font-weight: bold;
+    color: #333;
+    font-size : 20px;
+}
+#other-display {
+    margin-left : 30px;
+    white-space: pre-wrap; 
+    font-weight: bold;
+    color: #333;
+    font-size : 15px;
+}

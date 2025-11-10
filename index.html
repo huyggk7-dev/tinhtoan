@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Giải Phương Trình Bậc Hai </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" style="background-image: url();">
+        <h3> Huyya Hurie - Java Web</h3>
+        <form id="quadraticForm" style = "border-top: 1px solid #eee; padding-top: 15px;">
+        <select id="typeSelect">
+            <option value="1"> Phương trình Bậc 2 </option>
+            <option value="2"> Phương tình Bậc 3 </option>
+            <option value="3"> Số nguyên tố </option>
+           
+        </select>
+
+        <div class="flex-container">
+
+           <div class="input-group">
+                <!-- <label for="a"> N:</label> -->
+                <input type="number" step="any" id="a" required>
+                <span style="font-size:150%; border-style: none;">  x<sup>2</sup>  +  </span>
+
+                <!-- <label for="b"> x<sup>2</sup> </label> -->
+                <input type="number" step="any" id="b" required>
+                <span style="font-size:150%; border-style: none;">  x + </span>
+
+                <!-- <label for="c"> x :</label> -->
+                <input type="number" step="any" id="c" required>
+                <span style="font-size:150%; border-style: none;">  = 0 </span>
+
+            </div>
+        </div>
+            <button type="submit"> Giải Phương Trình </button>
+        </form>
+
+        <div id="result-area">
+            <p id="solution-display"> </p>
+            <p id="other-display"> </p>
+
+        </div>
+    </div>
+    <script src="script.js"> </script>
+</body>
+</html>
