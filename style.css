@@ -13,12 +13,12 @@ body {
 .container {
     background-image: Img1.png;
     background-color: #fff;
-    padding: 30px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 550px;
-    padding-bottom: 150px;
+    max-width: 400px;
+    padding-bottom: 70px;
 }
 
 h1 {
@@ -31,12 +31,12 @@ h1 {
 }
 
 h3 {
-   font-size: 150%; 
+   font-size: 120%; 
    text-align: center;
    border-style: double; border-radius: 5px; 
    margin-top: 0px;
-   margin-right: 120px;
-   margin-left: 125px; 
+   margin-right: 70px;
+   margin-left: 70px; 
    padding : 5px; 
 }
 
@@ -44,7 +44,7 @@ h3 {
   display: block;
   margin-right: 120px;
   margin-left: 125px; 
-  width: 50%;
+  width: 70%;
   margin: 10px auto 20px auto;
   padding: 8px;
   border-radius: 6px;
@@ -61,7 +61,7 @@ h3 {
 }
 
 .flex-container {
-  margin-left: 110px;
+  margin-left: 30px;
   gap: 0;
   display: flex;
   flex-direction: row;
@@ -70,7 +70,7 @@ h3 {
 }
 
 .flex-container span { 
-  font-size: 1.2em;
+  font-size: 100px;
   font-weight: bold;
   margin: 0 7px;
   vertical-align: middle;
@@ -84,7 +84,7 @@ label {
 }
 
 input[type="number"] {
-    width: 7%;
+    width: 5%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
