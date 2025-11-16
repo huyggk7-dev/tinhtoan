@@ -34,7 +34,7 @@ h3 {
    font-size: 120%; 
    text-align: center;
    border-style: double; border-radius: 5px; 
-   margin-top: 0px;
+   margin-top: 10px;
    margin-right: 70px;
    margin-left: 70px; 
    padding : 5px; 
@@ -53,6 +53,17 @@ h3 {
   font-weight: bold;
 }
 
+#numSelect {
+  width: 25%;
+  margin: 0; 
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 20px; margin-bottom: 20px;
+}
+
 .input-group {
     margin-bottom: 0px;
     margin-right: 0px;
@@ -60,17 +71,21 @@ h3 {
 
 }
 
+.hidden-input {
+    display: none;
+}
+
 .flex-container {
-  margin-left: 30px;
+  margin-left: 10px;
   gap: 0;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin: 10 auto;
+  margin: 10px auto;
 }
 
 .flex-container span { 
-  font-size: 100px;
+  font-size: 20px;
   font-weight: bold;
   margin: 0 0px;
   vertical-align: middle;
@@ -84,27 +99,35 @@ label {
 }
 
 input[type="number"] {
-    width: 9%;
-    padding: 12px;
+    width: 35px;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     -moz-appearance: textfield;
+    flex-shrink: 0;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+#action-group {
+    display: flex;                 
+    justify-content: center;   
+    align-items: center;       
+    margin: 10px auto 10px auto; 
+    margin-top: 10px; margin-bottom: 0px;
+    width: 100%;
+    max-width: 500px;
 }
 
 button {
-    display: block;
-    width: 50%;
-    margin: 0 auto;
-    margin-top: 40px;
-    margin-bottom: 30px;
-    padding: 10px;
-    background-color: #36CCFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
+    width: 40%;
+    margin: 10px; 
+    padding: 10px; margin-top: 20px; margin-bottom: 20px;
+    margin-left : 10px; margin-right : 10px;
+    background-color: #36CCFF; color: white;
+    border: none; border-radius: 4px;
+    font-size: 15px; font-weight: bold;
+    cursor: pointer; 
     transition: background-color 0.3s;
 }
 
@@ -128,12 +151,14 @@ button:hover {
     white-space: pre-wrap; 
     font-weight: bold;
     color: #333;
-    font-size : 20px;
+    font-size : 18px;
 }
 #other-display {
     margin-left : 30px;
     white-space: pre-wrap; 
     font-weight: bold;
     color: #333;
-    font-size : 15px;
+    font-size : 18px;
 }
+
+

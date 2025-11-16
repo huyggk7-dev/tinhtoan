@@ -11,38 +11,44 @@
         <h3> Huyya Hurie - Java Web</h3>
         <form id="quadraticForm" style = "border-top: 1px solid #eee; padding-top: 15px;">
         <select id="typeSelect">
-            <option value="1"> Phương trình Bậc 2 </option>
-            <option value="2"> Phương trình Bậc 3 </option>
-            <option value="3"> Số nguyên tố </option>
+            <option value="10"> Phương trình Bậc 2-3 </option>
+            <option value="20"> Ma trận bậc thang </option>
            
         </select>
 
         <div class="flex-container">
 
            <div class="input-group">
-                <!-- <label for="a"> N:</label> -->
                 <input type="number" step="any" id="a" required>
-                <span style="font-size:150%; border-style: none;">  x<sup>2</sup>  +  </span>
+                <span id="a-label">  x<sup>2</sup>  +  </span>
 
-                <!-- <label for="b"> x<sup>2</sup> </label> -->
                 <input type="number" step="any" id="b" required>
-                <span style="font-size:150%; border-style: none;">  x + </span>
+                <span id="b-label">  x + </span>
 
-                <!-- <label for="c"> x :</label> -->
                 <input type="number" step="any" id="c" required>
-                <span style="font-size:150%; border-style: none;">  = 0 </span>
-
+                <span id="c-label">  = 0 </span>
+                
+                <span id="d-group" class="hidden-input">  +  </span>
+                <input type="number" step="any" id="d" class="hidden-input" value="0">
+                <span id="d-label-eq" class="hidden-input">  = 0 </span>
             </div>
-        </div>
-            <button type="submit"> Giải Phương Trình </button>
-        </form>
+         </div>
+            <div id="action-group">
+                <button type="submit" id="solveButton"> Giải Phương Trình </button> 
+                <select id= "numSelect">
+                   <option value="1"> Bậc 2 </option>
+                   <option value="2"> Bậc 3 </option>
+                </select>
+            </div>
 
-        <div id="result-area">
-            <p id="solution-display"> </p>
-            <p id="other-display"> </p>
-
-        </div>
+            <div id="result-area">
+                <p id="solution-display"> </p>
+                <p id="other-display"> </p>
+            </div>
+    </form>
     </div>
-    <script src="script.js"> </script>
+
+    <script src="script.js">     
+    </script>
 </body>
 </html>

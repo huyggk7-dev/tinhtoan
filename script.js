@@ -1,6 +1,5 @@
 // Hàm tìm UCLN (Euclid)
-function ucln(a, b) {
-    // Chuyển sang số nguyên dương để tính UCLN
+function ucln(a, b) { 
     a = Math.abs(Math.round(a));
     b = Math.abs(Math.round(b));
     while (b) {
@@ -9,92 +8,205 @@ function ucln(a, b) {
     return a;
 }
 
-// Hàm xử lý và định dạng kết quả giống như hàm ketqua trong C++
+// Hàm xử lý và định dạng kết quả
 function formatResult(numerator, denominator) {
     const stp = numerator / denominator;
-
-    // Kiểm tra nếu cả tử số và mẫu số đều là số nguyên
     if (Number.isInteger(numerator) && Number.isInteger(denominator)) {
-        // Tránh chia cho 0
         if (denominator === 0) return "Lỗi: Chia cho 0"; 
-        
-        // Trường hợp nghiệm là số nguyên (a, b, c nguyên)
         const uc = ucln(numerator, denominator);
         const tu = numerator / uc;
         const mau = denominator / uc;
-
         if (mau === 1) {
             return tu;
-        } else if (mau === -1) { // Xử lý mẫu số âm
+        } else if (mau === -1) { 
              return -tu;
-        } else if (mau < 0) { // Đưa dấu âm lên tử số
+        } else if (mau < 0) { 
              return `${-tu}/${-mau}`;
         } else {
-            return `${tu}/${mau}`; // Dạng phân số tối giản
+            return `${tu}/${mau}`;
         }
     } else {
-        // Trường hợp có căn bậc hai (delta không phải số chính phương hoàn hảo), 
-        // hoặc a, b, c là số thực. Làm tròn 2 chữ số thập phân.
         const kq = Math.round(stp * 100) / 100;
         return `${kq}`;
     }
 }
 
+function clear() {
+    document.getElementById('solution-display').textContent = '';
+    document.getElementById('other-display').textContent = '';
+    document.getElementById('a').value = '';
+    document.getElementById('b').value = '';
+    document.getElementById('c').value = '';
+    
+    const dInput = document.getElementById('d');
+    if (dInput) dInput.value = '';
+}
+
+function loadSubOptions(selectElement, options) {
+    selectElement.innerHTML = ''; 
+    options.forEach(option => {
+        const newOption = document.createElement('option');
+        newOption.value = option.value;
+        newOption.textContent = option.text;
+        selectElement.appendChild(newOption);
+    });
+}
+
+// Hàm điều khiển hiển thị input (Bậc 2/Bậc 3)
+window.updateEquationUI = function(subType) {
+    const aLabel = document.getElementById('a-label');
+    const bLabel = document.getElementById('b-label');
+    const cInput = document.getElementById('c');
+    const cLabel = document.getElementById('c-label');
+    const dGroup = document.getElementById('d-group');
+    const dInput = document.getElementById('d');
+    const dLabelEnd = document.getElementById('d-label-eq');
+
+      // Phương trình Bậc 2
+    if (subType === "1") {
+        aLabel.innerHTML = ' x<sup>2</sup> + '; 
+        bLabel.innerHTML = ' x + ';            
+        cLabel.innerHTML = ' = 0 ';            
+        
+        // Hiện các trường Bậc 2
+        document.getElementById('a').style.display = 'inline';
+        document.getElementById('b').style.display = 'inline';
+        cInput.style.display = 'inline';
+        
+        // Ẩn các trường Bậc 3
+        if (dGroup) dGroup.style.display = 'none';
+        if (dInput) dInput.style.display = 'none';
+        if (dLabelEnd) dLabelEnd.style.display = 'none';
+        
+    // Phương trình Bậc 3
+    } else if (subType === "2") {
+        aLabel.innerHTML = ' x<sup>3</sup> + '; 
+        bLabel.innerHTML = ' x<sup>2</sup> + '; 
+        cLabel.innerHTML = ' x ';             
+        
+        // Hiện các trường Bậc 3
+        if (dGroup) dGroup.style.display = 'inline';
+        if (dInput) dInput.style.display = 'inline';
+        if (dLabelEnd) dLabelEnd.style.display = 'inline';
+        
+    // Ẩn tất cả input (dùng cho chế độ Ma trận/Khác)
+    } else {
+        // Tạm ẩn toàn bộ input
+        document.getElementById('a').style.display = 'none';
+        document.getElementById('b').style.display = 'none';
+        cInput.style.display = 'none';
+        if (dGroup) dGroup.style.display = 'none';
+        if (dInput) dInput.style.display = 'none';
+        if (dLabelEnd) dLabelEnd.style.display = 'none';
+        aLabel.innerHTML = '';
+        bLabel.innerHTML = '';
+        cLabel.innerHTML = '';
+    }
+}
+
+// Hàm điều khiển chính (typeSelect -> numSelect + Button Text)
+window.updateMainUI = function(mainType) {
+    const numSelect = document.getElementById('numSelect');
+    const solveButton = document.getElementById('solveButton');
+   
+    if (mainType === "10") { // Phương trình
+        solveButton.textContent = "Giải Phương Trình";        
+        loadSubOptions(numSelect, [
+            { value: "1", text: "Bậc 2" },
+            { value: "2", text: "Bậc 3" }
+        ]);
+        window.updateEquationUI(numSelect.value);
+
+    } else if (mainType === "20") { // Ma trận
+        solveButton.textContent = "Tính Ma Trận";        
+        loadSubOptions(numSelect, [
+            { value: "4", text: "3x3" },
+            { value: "5", text: "4x4" }
+        ]);
+        window.updateEquationUI('none'); 
+        
+    } else { // Khác
+        solveButton.textContent = "Tính Toán Khác";
+        solveButton.style.display = 'block'; 
+        
+        loadSubOptions(numSelect, [
+            { value: "3", text: "Số nguyên tố" },
+            { value: "99", text: "Tùy chọn khác" }
+        ]);
+        window.updateEquationUI('none');
+    }
+}
+
+// Logic Giải Phương Trình Bậc 2 (Giữ nguyên)
 document.getElementById('quadraticForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Ngăn chặn form gửi đi theo cách truyền thống
-
-    // Lấy giá trị a, b, c từ input, đảm bảo chúng là số thực (float)
-    const a = parseFloat(document.getElementById('a').value);
-    const b = parseFloat(document.getElementById('b').value);
-    const c = parseFloat(document.getElementById('c').value);
-
-    // Tính Delta
-    const delta = b * b - 4 * a * c;
-
-    // Hiển thị Delta
-    // document.getElementById('delta-display').textContent = `Delta = ${delta}`;
+    event.preventDefault(); 
+        const mainType = document.getElementById('typeSelect').value; 
+    const subType = document.getElementById('numSelect').value; 
+    
+    const a = parseFloat(document.getElementById('a').value) || 0;
+    const b = parseFloat(document.getElementById('b').value) || 0;
+    const c = parseFloat(document.getElementById('c').value) || 0;
+    const d = parseFloat(document.getElementById('d').value) || 0; 
 
     const solutionDisplay = document.getElementById('solution-display');
+    const otherDisplay = document.getElementById('other-display');
 
-    if (a === 0) {
-        // Trường hợp đặc biệt: Phương trình bậc nhất (ax^2 + bx + c = 0)
-        if (b === 0) {
-            if (c === 0) {
-                solutionDisplay.textContent = "Phương trình vô số nghiệm (0x + 0 = 0)";
+    if (mainType === "10" && subType === "1") { // Phương trình Bậc 2
+        const delta = b*b - 4*a*c;
+        //const xv = - b/(2a)
+        //const yv = xv*a*a + b*xv + c
+        if (a === 0) {
+            if (b === 0) {
+                solutionDisplay.textContent = (c === 0) ? "Phương trình vô số nghiệm" : "Phương trình vô nghiệm";
             } else {
-                solutionDisplay.textContent = "Phương trình vô nghiệm (0x + c = 0, c khác 0)";
+                solutionDisplay.textContent = `Phương trình có 1 nghiệm: x = ${formatResult(-c, b)}`;
             }
-        } else {
-            // Giải phương trình bậc nhất: bx + c = 0 => x = -c/b
-            const x = -c / b;
-            // Sử dụng formatResult để làm tròn hoặc hiển thị phân số nếu có thể
-            solutionDisplay.textContent = `Đây là phương trình bậc nhất, có nghiệm: x = ${formatResult(-c, b)}`;
+            return; 
         }
-        return; // Dừng hàm
+
+        if (delta > 0) {
+            const x1 = formatResult(-b + Math.sqrt(delta), 2 * a);
+            const x2 = formatResult(-b - Math.sqrt(delta), 2 * a);
+            solutionDisplay.innerHTML = `Phương trình gồm 2 nghiệm: <br>x = ${x1} và x = ${x2}`;
+        } else if (delta === 0) {
+            solutionDisplay.textContent = `Phương trình gồm 2 nghiệm kép: x = ${formatResult(-b, 2 * a)}`;
+        } else {
+            const thuc = formatResult(-b, 2 * a);
+            const ao = formatResult(Math.sqrt(-delta), 2 * a);
+            solutionDisplay.innerHTML = `Phương trình gồm 2 nghiệm phức: <br>x = ${thuc} + ${ao} i <br>x = ${thuc} - ${ao} i`;
+        }
+        // GTLN,NN 
+        //if (a > 0 ){
+        //}
+    } 
+    else {
+        solutionDisplay.textContent = `Chức năng chưa được lập trình.`;
+        otherDisplay.textContent = `Type: ${mainType}, Sub: ${subType}`;
     }
+    
+});
 
-    // Biện luận theo Delta
-    if (delta > 0) {
-        // 2 nghiệm phân biệt: x1 = (-b + sqrt(delta)) / 2a, x2 = (-b - sqrt(delta)) / 2a
-        const sqrtDelta = Math.sqrt(delta);
-        const numerator1 = -b + sqrtDelta;
-        const numerator2 = -b - sqrtDelta;
-        const denominator = 2 * a;
+document.addEventListener('DOMContentLoaded', () => {
+    const typeSelect = document.getElementById('typeSelect'); 
+    const numSelect = document.getElementById('numSelect'); 
 
-        const x1 = formatResult(numerator1, denominator);
-        const x2 = formatResult(numerator2, denominator);
-
-        solutionDisplay.innerHTML = `Phương trình có 2 nghiệm phân biệt: <br>x = ${x1} và x = ${x2}`;
-    } else if (delta === 0) {
-        // Nghiệm kép: x = -b / 2a
-        const x_kep = formatResult(-b, 2 * a);
-        solutionDisplay.textContent = `Phương trình có nghiệm kép: x = ${x_kep}`;
-    } else {
-        // Nghiệm phức
-        const thuc = formatResult(-b, 2 * a);
-        const ao = formatResult(Math.sqrt(-delta), 2 * a);
-        
-        solutionDisplay.innerHTML = `Phương trình có 2 nghiệm phức liên hợp: <br>x = ${thuc} + ${ao} i <br>x = ${thuc} - ${ao} i`;
+    if (typeSelect) {
+        window.updateMainUI(typeSelect.value);
     }
-    document.getElementById('other-display').textContent = `Các nghiệm đã được làm tròn 2 chữ số hoặc chuyển thành phân số.`;
+    
+    if (typeSelect) {
+        typeSelect.addEventListener('change', (event) => {
+            clear();
+            window.updateMainUI(event.target.value);
+        });
+    }
+    
+    if (numSelect) {
+         numSelect.addEventListener('change', (event) => {
+            clear();
+            if (typeSelect.value === "10") {
+                window.updateEquationUI(event.target.value);
+            }
+         });
+    }
 });
