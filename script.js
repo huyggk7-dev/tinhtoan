@@ -273,12 +273,12 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
                     const imag_str = formatResult(imag_float * 1, 1);
                     if (real !== 0) {
                     solutionDisplay.innerHTML = `Phương trình có 1 nghiệm thực và 2 nghiệm phức liên hợp:<br>`;
-                    solutionDisplay.innerHTML += ` - x = ${xr_}<br>`;
+                    if ( xr_ ) { solutionDisplay.innerHTML += ` - x = ${xr_}<br>`;} else { solutionDisplay.innerHTML += ` - x = ${formatResult(xr, 1)}<br>`; }
                     solutionDisplay.innerHTML += ` - x = ${real_str} + ${imag_str}i<br> - x = ${real_str} - ${imag_str}i`;
 
                     } else {
                     solutionDisplay.innerHTML = `Phương trình có 1 nghiệm thực và 2 nghiệm phức liên hợp:<br>`;
-                    solutionDisplay.innerHTML += ` - x = ${xr_}<br>`;
+                    if ( xr_ ) { solutionDisplay.innerHTML += ` - x = ${xr_}<br>`;} else { solutionDisplay.innerHTML += ` - x = ${formatResult(xr, 1)}<br>`; }
                     solutionDisplay.innerHTML += ` - x = ${imag_str}i<br> - x = ${imag_str}i`;
 
                     }
