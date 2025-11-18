@@ -189,7 +189,7 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
         }
     } 
     else if (mainType === "10" && subType === "2") {// Phương trình Bậc 3
-        let xr = null ; 
+        let xr = null ; let xr_ ; 
         if (a === 0) {
             solutionDisplay.textContent = "Vui lòng nhập lại a khác 0.";
             return;}
@@ -338,7 +338,7 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
             ctriOutput += `- Điểm cực đại : x = ${x1_kq}, y = ${formatResult(y1,1)}<br>`; }
 
         solutionDisplay.innerHTML += ctriOutput;
-        solutionDisplay.innerHTML += '<br>Các số đã được làm tròn.';
+        solutionDisplay.innerHTML += 'Các số đã được làm tròn.<br>';
         return;}
 
      } else {
