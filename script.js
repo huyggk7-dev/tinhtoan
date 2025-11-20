@@ -33,6 +33,21 @@ function formatResult(numerator, denominator) {
     }
 }
 
+function isInteger(number, epsilon = 1e-15) {
+    return Math.abs(number - Math.round(number)) < epsilon;
+}
+
+function toFraction(num, another) {
+    let kq = num ;
+    for (let i = 1; i < 101; i++) {
+        let tuso = num / (1/i);
+        if (isInteger(tuso)) {
+            kq = formatResult( Math.round(tuso) , i);
+            break;
+           } else { kq = formatResult(num , 1) ; }}
+    return kq;
+}
+
 // Hàm clear
 function clear() {
     document.getElementById('solution-display').textContent = '';
@@ -58,6 +73,7 @@ function loadSubOptions(selectElement, options) {
 // Hàm điều khiển hiển thị input (Bậc 2/Bậc 3)
 window.updateEquationUI = function(subType) {
     const aLabel = document.getElementById('a-label');
+    const frontLb = document.getElementById('front-a');
     const bLabel = document.getElementById('b-label');
     const cInput = document.getElementById('c');
     const cLabel = document.getElementById('c-label');
@@ -67,6 +83,7 @@ window.updateEquationUI = function(subType) {
 
       // Phương trình Bậc 2
     if (subType === "1") {
+        frontLb.innerHTML = ''; 
         aLabel.innerHTML = ' x<sup>2</sup> + '; 
         bLabel.innerHTML = ' x + ';            
         cLabel.innerHTML = ' = 0 ';            
@@ -83,6 +100,7 @@ window.updateEquationUI = function(subType) {
         
     // Phương trình Bậc 3
     } else if (subType === "2") {
+        frontLb.innerHTML = ''; 
         aLabel.innerHTML = ' x<sup>3</sup> + '; 
         bLabel.innerHTML = ' x<sup>2</sup> + '; 
         cLabel.innerHTML = ' x ';             
@@ -91,8 +109,22 @@ window.updateEquationUI = function(subType) {
         if (dGroup) dGroup.style.display = 'inline';
         if (dInput) dInput.style.display = 'inline';
         if (dLabelEnd) dLabelEnd.style.display = 'inline';
+
+    // Số phức - Argument
+    } else if (subType === "4") {
+
+        frontLb.innerHTML = ' Xét số '; 
+        aLabel.innerHTML = ' + '; 
+        bLabel.innerHTML = 'i có :';             
         
-    // Ẩn tất cả input (dùng cho chế độ Ma trận/Khác)
+        // Ẩn ô A và ô D
+        
+        document.getElementById('c').style.display = 'none';
+        if (dGroup) dGroup.style.display = 'none';
+        if (dInput) dInput.style.display = 'none';
+        if (dLabelEnd) dLabelEnd.style.display = 'none';
+
+    // Ẩn tất cả input (dùng cho chế độ Khác)
     } else {
         // Tạm ẩn toàn bộ input
         document.getElementById('a').style.display = 'none';
@@ -121,12 +153,12 @@ window.updateMainUI = function(mainType) {
         window.updateEquationUI(numSelect.value);
 
     } else if (mainType === "20") { // Số phức
-        solveButton.textContent = "Xét số phức ";        
+        solveButton.textContent = "Submit - Solve ";        
         loadSubOptions(numSelect, [
             { value: "4", text: "Góc Arg" },
             { value: "5", text: "Căn bậc" }
         ]);
-        window.updateEquationUI('none'); 
+        window.updateEquationUI(numSelect.value); 
         
     } else { // Khác
         solveButton.textContent = "Tính Toán Khác";
@@ -140,27 +172,28 @@ window.updateMainUI = function(mainType) {
     }
 }
 
-// Logic Giải Phương Trình Bậc 2 (Giữ nguyên)
+// Logic các chức năng
 document.getElementById('quadraticForm').addEventListener('submit', function(event) {
     event.preventDefault(); 
         const mainType = document.getElementById('typeSelect').value; 
     const subType = document.getElementById('numSelect').value; 
     
-    const a = parseFloat(document.getElementById('a').value) || 0;
-    const b = parseFloat(document.getElementById('b').value) || 0;
-    const c = parseFloat(document.getElementById('c').value) || 0;
-    const d = parseFloat(document.getElementById('d').value) || 0; 
+    let a = parseFloat(document.getElementById('a').value)  || 0;
+    let b = parseFloat(document.getElementById('b').value)  || 0;
+    let c = parseFloat(document.getElementById('c').value)  || 0;
+    let d = parseFloat(document.getElementById('d').value)  || 0; 
 
     const solutionDisplay = document.getElementById('solution-display');
     const otherDisplay = document.getElementById('other-display');
 
     if (mainType === "10" && subType === "1") { // Phương trình Bậc 2
+        
         const delta = b*b - 4*a*c;
-        const xv = -b/(-2*a)
-        const yv = xv*a*a + b*xv + c;
+        const xv = -b/(2*a)
+        const yv = xv*xv*a + b*xv + c;
 
         const x0 = formatResult(-b, 2*a);
-        const y0 = formatResult(yv*1, 1);
+        const y0 = toFraction(yv*1, 1);
         if (a === 0) {
             if (b === 0) {
                 solutionDisplay.textContent = (c === 0) ? "Phương trình vô số nghiệm" : "Phương trình vô nghiệm";
@@ -232,23 +265,23 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
                 const term1_pow = abs_k + Math.sqrt(Math.pow(k, 2) - 1);
                 const term2_pow = abs_k - Math.sqrt(Math.pow(k, 2) - 1);
                 
-                const term1 = Math.pow(term1_pow, 1.0 / 3); 
-                const term2 = Math.pow(term2_pow, 1.0 / 3);
+                const term1 = Math.cbrt(term1_pow); 
+                const term2 = Math.cbrt(term2_pow);
                 
                 let factor = (Math.sqrt(dt) * abs_k) / (3 * a * k);
                 xr = factor * (term1 + term2) + x0;
 
                 }
         } else if (dt === 0) { // Nghiệm bội
-            const term = Math.pow(Math.abs(Math.pow(b, 3) - 27 * a * a * d), 1.0 / 3);
+            const term = Math.cbrt(Math.abs(Math.pow(b, 3) - 27 * a * a * d));
             xr = (-b - term) / (3 * a);
             xr_ = formatResult((-b - term) , (3 * a));
             
         } else { // dt < 0: 1 nghiệm thực, 2 phức liên hợp
             const sqrt_abs_dt = Math.sqrt(dt_abs);
             
-            const term1 = Math.pow(k + Math.sqrt(k * k + 1), 1.0 / 3);
-            const term2 = Math.pow(-(k - Math.sqrt(k * k + 1)), 1.0 / 3);
+            const term1 = Math.cbrt(k + Math.sqrt(k * k + 1));
+            const term2 = Math.cbrt(-( k - Math.sqrt(k * k + 1) ));
             
             xr = (sqrt_abs_dt / (3 * a)) * (term1 - term2) + x0;
             xr_ = formatResult( (sqrt_abs_dt * (term1 - term2) - b) ,(3 * a));
@@ -256,6 +289,10 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
         
         // --- Xử lí kết quả 1 nghiệm thực, 2 nghiệm phức ---
         if (xr !== null) {
+            // TH b và c = 0
+            if (b === 0 && c === 0) {
+            const val = -d / a;
+            xr = Math.cbrt(val);}
                         
             const real = (-b / a - xr) / 2;
             const real_str = formatResult(real * 1, 1);
@@ -273,15 +310,13 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
                     const imag_str = formatResult(imag_float * 1, 1);
                     if (real !== 0) {
                     solutionDisplay.innerHTML = `Phương trình có 1 nghiệm thực và 2 nghiệm phức liên hợp:<br>`;
-                    if ( xr_ ) { solutionDisplay.innerHTML += ` - x = ${xr_}<br>`;} else { solutionDisplay.innerHTML += ` - x = ${formatResult(xr, 1)}<br>`; }
+                    if ( xr_ ) { solutionDisplay.innerHTML += ` - x = ${toFraction(xr,1)}<br>`;} else { solutionDisplay.innerHTML += ` - x = ${formatResult(xr, 1)}<br>`; }
                     solutionDisplay.innerHTML += ` - x = ${real_str} + ${imag_str}i<br> - x = ${real_str} - ${imag_str}i`;
 
                     } else {
                     solutionDisplay.innerHTML = `Phương trình có 1 nghiệm thực và 2 nghiệm phức liên hợp:<br>`;
-                    if ( xr_ ) { solutionDisplay.innerHTML += ` - x = ${xr_}<br>`;} else { solutionDisplay.innerHTML += ` - x = ${formatResult(xr, 1)}<br>`; }
-                    solutionDisplay.innerHTML += ` - x = ${imag_str}i<br> - x = ${imag_str}i`;
-
-                    }
+                    if ( xr_ ) { solutionDisplay.innerHTML += ` - x = ${toFraction(xr,1)}<br>`;} else { solutionDisplay.innerHTML += ` - x = ${toFraction(xr, 1)}<br>`; }
+                    solutionDisplay.innerHTML += ` - x = ${imag_str}i<br> - x = ${imag_str}i`;}
                 }
             } else {
                  // Trường hợp có lỗi
@@ -329,22 +364,26 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
 
             if ( y2 > y1 ) {          
             ctriOutput += `<br>Có 2 cực trị:<br>`;
-            ctriOutput += `- Điểm cực tiểu : x = ${x1_kq}, y = ${formatResult(y1,1)}<br>`;
-            ctriOutput += `- Điểm cực đại : x = ${x2_kq}, y = ${formatResult(y2,1)}<br>`; 
+            ctriOutput += `- Điểm cực tiểu : x = ${x1_kq}, y = ${toFraction(y1,1)}<br>`;
+            ctriOutput += `- Điểm cực đại : x = ${x2_kq}, y = ${toFraction(y2,1)}<br>`; 
 
             } else if ( y1 > y2 ) {
             ctriOutput += `<br>Có 2 cực trị:<br>`;
-            ctriOutput += `- Điểm cực tiểu : x = ${x2_kq}, y = ${formatResult(y2,1)}<br>`;
-            ctriOutput += `- Điểm cực đại : x = ${x1_kq}, y = ${formatResult(y1,1)}<br>`; }
+            ctriOutput += `- Điểm cực tiểu : x = ${x2_kq}, y = ${toFraction(y2,1)}<br>`;
+            ctriOutput += `- Điểm cực đại : x = ${x1_kq}, y = ${toFraction(y1,1)}<br>`; }
 
         solutionDisplay.innerHTML += ctriOutput;
         solutionDisplay.innerHTML += 'Các số đã được làm tròn.<br>';
         return;}
 
+     } else if (mainType === "20" && subType === "4") { //Arg số phức
+
+
+
      } else {
         solutionDisplay.textContent = "Chức năng sắp có, coming soon";
      }
-     otherDisplay.textContent = "Các số đã được làm tròn.";
+     otherDisplay.textContent = "Thử nhiều chức năng khác nhé !!!";
 
 })
 
