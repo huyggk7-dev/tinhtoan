@@ -12,14 +12,13 @@
         <form id="quadraticForm" style = "border-top: 1px solid #eee; padding-top: 15px;">
         <select id="typeSelect">
             <option value="10"> Phương trình Bậc 2-3 </option>
-            <option value="20"> Số phức </option>
+            <option value="20"> Phương trình Phân thức </option>
            
         </select>
-
+           
+        <h1 id="front-a">  </h1>
         <div class="flex-container">
-
            <div class="input-group">
-                <span id="front-a">  </span>
                 <input type="number" step="any" id="a" value="0" >
                 <span id="a-label">  x<sup>2</sup>  +  </span>
 
@@ -32,8 +31,21 @@
                 <span id="d-group" class="hidden-input">  +  </span>
                 <input type="number" step="any" id="d" class="hidden-input" value="0">
                 <span id="d-label-eq" class="hidden-input">  = 0 </span>
-            </div>
-         </div>
+           </div>
+        </div>
+
+           <hr id="fraction-line" style= "width: 70%; border-top: 2px solid #808080 ; margin: 5px auto; display: block;">
+
+        <div class="flex-container">
+           <div id="mn-group" class="input-group" style=" display:none; margin-top: 5px;">
+                <span id="m-label-start"> </span>
+                <input type="number" step="any" id="m" required>
+                <span id="m-label"> x + </span>
+        
+                <input type="number" step="any" id="n" required>
+                <span id="n-label"> = 0 </span>
+            </div> </div>
+
             <div id="action-group">
                 <button type="submit" id="solveButton"> Giải Phương Trình </button> 
                 <select id= "numSelect">
