@@ -61,7 +61,6 @@ function clear() {
 }
 
 // Hàm Load
-
 function loadSubOptions(selectElement, options) {
     selectElement.innerHTML = ''; 
     options.forEach(option => {
@@ -129,25 +128,33 @@ window.updateEquationUI = function(subType) {
     } else if (subType === "4") {
         setVisibility(true, true, false, false, true);
         fractionLine.style.width = '50%';
-        frontLb.innerHTML = 'Xét phương trình phân thức :'; 
+        frontLb.innerHTML = 'Xét phương trình phân thức trên ℝ:'; 
         aLabel.innerHTML = 'x +'; 
         bLabel.innerHTML = ' ';
-        cLabel.innerHTML = ' ';            
+        cLabel.innerHTML = ' ';      
+      
         if (dLabelEnd) dLabelEnd.innerHTML = ' ' ;
-
         if (mLabelStart) mLabelStart.innerHTML = ''; 
         if (mLabel) mLabel.innerHTML = 'x +'; 
         if (nLabel) nLabel.innerHTML = '';
         
     // Phương trình phân thức bậc 2
     } else if (subType === "5") {
+        setVisibility(true, true, true, false, true);
+        fractionLine.style.width = '70%';
 
-        frontLb.innerHTML = ''; 
-        aLabel.innerHTML = ''; 
-        bLabel.innerHTML = 'i có :';  
-        cLabel.innerHTML = '';             
+        frontLb.innerHTML = 'Xét phương trình phân thức trên ℝ :'; 
+        aLabel.innerHTML = ' x<sup>2</sup> + '; 
+        bLabel.innerHTML = ' x + ';  
+        cLabel.innerHTML = ' ';    
+        cInput.style.display = 'inline';
+
+        if (dLabelEnd) dLabelEnd.innerHTML = ' ' ;
+        if (mLabelStart) mLabelStart.innerHTML = ''; 
+        if (mLabel) mLabel.innerHTML = 'x +'; 
+        if (nLabel) nLabel.innerHTML = '';
+
         
-     
     // Ẩn tất cả input (dùng cho chế độ Khác)
     } else {
         // Tạm ẩn toàn bộ input
@@ -404,17 +411,31 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
         solutionDisplay.innerHTML += `Các số đã được làm tròn.<br>`;
         return;}
 
-     } else if (mainType === "20" && subType === "4") { //Phương trình phân thức   
+     } else if (mainType === "20" && subType === "4") { //Phương trình phân thức bậc 1  
      
         if (m === 0) {
-            solutionDisplay.textContent = "Vui lòng nhập lại m khác 0.";
+            solutionDisplay.textContent = "Vui lòng nhập lại m khác 0 trong mẫu mx + n.";
             return;}
+        const D = (a * n) - (b * m);
+
+        if (Math.abs(D) < 1e-9) { // D = 0 (Hằng số)
+            solutionDisplay.innerHTML += `Hàm số là hàm hằng trên từng khoảng xác định.<br>`;
+        } else {
+            if (D > 0) {
+                solutionDisplay.innerHTML += `Hàm số luôn Đồng biến trên từng khoảng xác định.<br>`;
+            } else { // D < 0
+                solutionDisplay.innerHTML += `Hàm số luôn Nghịch biến trên từng khoảng xác định.<br>`;
+            }
+        }
+
         if (a === 0 && b === 0) {
-            solutionDisplay.textContent = "Phương trình vô số nghiệm ";
-            otherDisplay.textContent = `Điều kiện: x ≠ ${formatResult(-n, m)}.`;
+            solutionDisplay.innerHTML += `Phương trình hàm số có vô số nghiệm. <br>`;
+            otherDisplay.innerHTML = `Điều kiện: x ≠ ${toFraction(-n/m, 1)}.`;
             return;}
         if (a === 0) {
-            solutionDisplay.textContent = "Phương trình vô nghiệm (Tử số là hằng số khác 0).";
+            solutionDisplay.innerHTML += `Phương trình hàm số vô nghiệm (Tử số là hằng số khác 0).<br>`;
+            solutionDisplay.innerHTML += `<br>Tiệm cận ngang : y = 0 `;
+            solutionDisplay.innerHTML += `<br>Tiệm cận đứng : x = ${toFraction(-n/m, 1)}.`;
             return;}
         
         // Tìm ĐKXĐ và nghiệm 
@@ -425,17 +446,184 @@ document.getElementById('quadraticForm').addEventListener('submit', function(eve
 
         // 3. Kiểm tra: Nghiệm tử số có trùng ĐKXĐ không?
         if (Math.abs(x_num - x_dkxd) < 1e-9) { 
-            solutionDisplay.textContent = `Phương trình vô nghiệm.`;
-            otherDisplay.textContent = `Nghiệm x = ${x_num_} bị loại do không thỏa mãn ĐKXĐ (x ≠ ${x_dkxd_}).`;
+            solutionDisplay.innerHTML += `Phương trình hàm số vô nghiệm.`;
+            otherDisplay.innerHTML = `Nghiệm x = ${x_num_} bị loại do không thỏa mãn ĐKXĐ (x ≠ ${x_dkxd_}).`;
         } else {
-            solutionDisplay.textContent = `Phương trình có nghiệm duy nhất: x = ${x_num_}`;
-            otherDisplay.textContent = `Điều kiện xác định: x ≠ ${x_dkxd_}. Nghiệm thỏa mãn ĐKXĐ.`;
+            solutionDisplay.innerHTML += `Phương trình có nghiệm duy nhất: x = ${x_num_} <br>`;
+            otherDisplay.innerHTML = `Điều kiện xác định: x ≠ ${x_dkxd_}. Nghiệm thỏa mãn ĐKXĐ.`;
+            solutionDisplay.innerHTML += `<br>Tiệm cận ngang : y = ${toFraction(a/m, 1)} `;
+            solutionDisplay.innerHTML += `<br>Tiệm cận đứng : x = ${toFraction(-n/m, 1)}.`;
         }
+        return;
+
+     } else if (mainType === "20" && subType === "5") { //Phương trình phân thức bậc 2
+        if (m === 0) {
+            solutionDisplay.textContent = "Vui lòng nhập lại số m khác 0 trong mẫu mx + n.";
+            return;
+        }
+
+        // Tìm ĐKXĐ
+        const x_dkxd = -n / m;
+        const x_dkxd_ = toFraction(-n/m, 1 );
+
+        // Hàm tính giá trị hàm số y = (Ax² + Bx + C) / (Mx + N)
+        function calculateValue(x, a, b, c, m, n) {
+            const numerator = a * Math.pow(x, 2) + b * x + c;
+            const denominator = m * x + n;
+            if (Math.abs(denominator) < 1e-9) return NaN; // Trả về NaN nếu Mẫu bằng 0
+            return numerator / denominator;
+        }
+        // Giải phương trình
+        let solutionOutput = ``;
+        const delta_num = b * b - 4 * a * c; 
+
+        if (a === 0) { 
+            solutionDisplay.innerHTML = `Vui lòng nhập lại số a khác 0 trong tử  ax<sup>2</sup> + bx + c = 0. <br>`  
+     
+        } else { // Tử số là bậc 2: ax² + bx + c = 0
+            if (delta_num < 0) {
+                solutionOutput += `Phương trình vô nghiệm (Tử số vô nghiệm).`;
+            } else if (delta_num === 0) {
+                const x_num = -b / (2 * a);
+                if (Math.abs(x_num - x_dkxd) < 1e-9) { 
+                    solutionOutput += `Phương trình phân thức vô nghiệm (Nghiệm trùng ĐKXĐ).`;
+                } else {
+                    solutionOutput += `Phương trình phân thức có nghiệm kép: x = ${toFraction(-b/(2*a), 1 )}`;
+                }
+            } else {
+                const sqrt_delta = Math.sqrt(delta_num);
+                const x_num1 = (-b + sqrt_delta) / (2 * a);
+                const x_num2 = (-b - sqrt_delta) / (2 * a);
+                let valid_roots = [];
+
+                if (Math.abs(x_num1 - x_dkxd) > 1e-9) valid_roots.push(x_num1);
+                if (Math.abs(x_num2 - x_dkxd) > 1e-9) valid_roots.push(x_num2);
+
+                if (valid_roots.length === 0) {
+                    solutionOutput += `Phương trình vô nghiệm.`;
+                } else if (valid_roots.length === 1) {
+                    solutionOutput += `Phương trình có nghiệm duy nhất: x = ${toFraction(valid_roots[0], 1)}`;
+                } else {
+                    solutionOutput += `Phương trình có 2 nghiệm: <br> - x = ${toFraction(valid_roots[0], 1)} <br> - x = ${toFraction(valid_roots[1], 1)}`;
+                }
+            }
+        }
+        
+        solutionDisplay.innerHTML = solutionOutput;
+        otherDisplay.innerHTML += `Điều kiện xác định: x ≠ ${x_dkxd_}.`;
+        // Xét cực trị với đạo hàm y' = [ (AM)x² + (2AN)x + (BN-CM) ] / (Mx+N)²
+        const a_prime = a * m;
+        const b_prime = 2 * a * n;
+        const c_prime = b * n - c * m;
+        const delta_prime = b_prime * b_prime - 4 * a_prime * c_prime;
+        
+        let ctriOutput = `<br><br>`;            
+        if (delta_prime < 0) {
+            ctriOutput += `Đạo hàm y'= 0 vô nghiệm trên ℝ. Hàm số không có cực trị.`;
+
+        } else if (delta_prime === 0) {
+            const x_crit = -b_prime / (2 * a_prime);
+            if (Math.abs(x_crit - x_dkxd) < 1e-9) {
+                ctriOutput += `Điểm làm đạo hàm = 0 trùng ĐKXĐ. Hàm số không có cực trị.<br>`;
+            } else {
+                ctriOutput += `Đạo hàm phương trình có nghiệm kép. Hàm số không có cực trị (có thể có điểm uốn tại x = ${toFraction(x_crit, 1)}).`;
+            }
+        } else {
+            // Có 1 hoặc 2 cực trị (delta_prime > 0)
+            const sqrt_delta_prime = Math.sqrt(delta_prime);
+            const x_crit1 = (-b_prime + sqrt_delta_prime) / (2 * a_prime);
+            const x_crit2 = (-b_prime - sqrt_delta_prime) / (2 * a_prime);
+            
+            let valid_crit = [];
+            if (Math.abs(x_crit1 - x_dkxd) > 1e-9) valid_crit.push(x_crit1);
+            if (Math.abs(x_crit2 - x_dkxd) > 1e-9) valid_crit.push(x_crit2);
+
+            const x_a = Math.min(x_crit1, x_crit2);
+            const x_b = Math.max(x_crit1, x_crit2);
+            
+            let x_max = null, y_max = null;
+            let x_min = null, y_min = null;
+            let valid_crit_count = 0;
+
+            // Kiểm tra nghiệm x_a và x_b
+            if (Math.abs(x_a - x_dkxd) > 1e-9) { 
+                valid_crit_count++;
+                // Xét dấu: Dấu của a_prime quyết định CĐ hay CT
+                if (a_prime > 0) {
+                    // x_a là CĐ, x_b là CT
+                    x_max = x_a; 
+                    y_max = calculateValue(x_a, a, b, c, m, n);
+                } else {
+                    // x_a là CT, x_b là CĐ
+                    x_min = x_a;
+                    y_min = calculateValue(x_a, a, b, c, m, n);
+                }
+            }
+
+            if (Math.abs(x_b - x_dkxd) > 1e-9) { 
+                valid_crit_count++;
+                if (a_prime > 0) {
+                    // x_a là CĐ, x_b là CT
+                    x_min = x_b; 
+                    y_min = calculateValue(x_b, a, b, c, m, n);
+                } else {
+                    // x_a là CT, x_b là CĐ
+                    x_max = x_b;
+                    y_max = calculateValue(x_b, a, b, c, m, n);
+                }}
+
+           if (valid_crit_count === 2) {
+                ctriOutput += `Hàm số có 2 điểm cực trị:<br>`;
+                ctriOutput += `- Điểm cực tiểu : x = ${toFraction(x_min, 1)}, y = ${toFraction(y_min, 1)} <br>`;
+                ctriOutput += `- Điểm cực đại : x = ${toFraction(x_max, 1)}, y = ${toFraction(y_max, 1)}`;
+            } else if (valid_crit_count === 1) {
+                // Chỉ còn 1 cực trị (CĐ hoặc CT)
+                ctriOutput += `Hàm số có 1 điểm cực trị (do 1 nghiệm trùng ĐKXĐ):<br>`;
+                if (x_max !== null) {
+                    ctriOutput += `- Điểm cực đại : x = ${toFraction(x_max, 1)}, y = ${toFraction(y_max, 1)}`;
+                } else {
+                    ctriOutput += `- Điểm cực tiểu : x = ${toFraction(x_min, 1)}, y = ${toFraction(y_min, 1)}`;
+                }
+            } else {
+                ctriOutput += `Hàm số không có cực trị (cả 2 nghiệm trùng ĐKXĐ).`;
+            }
+        }
+
+        solutionDisplay.innerHTML += ctriOutput;
+
+        // Tìm tiệm cận        
+        const x_dng = -n / m; 
+        
+        const a_tcx = a / m;
+        const b_tcx_tu = b * m - a * n;
+        const b_tcx_mau = m * m;
+        
+        let tcanOutput = `<br><br> Phân tích Tiệm cận:<br>`;
+        
+        tcanOutput += `- Tiệm cận đứng: x = ${toFraction(x_dng, 1)} <br>`;
+        let y_tcx = b_tcx_tu / b_tcx_mau ; let y_tcx_ = `` ; 
+
+        if ( Math.abs(y_tcx) < 1e-9 ) { y_tcx_ = ``; 
+        } else if ( y_tcx > 0 ) { y_tcx_ = `+ ${toFraction(y_tcx, 1)}`; 
+        } else if ( y_tcx < 0 ) { y_tcx_ = `- ${toFraction( - y_tcx, 1)}`; }
+ 
+        if (a !== 0 && m !== 0) {
+            if ( Math.abs(a_tcx - 1) < 1e-9 ) { 
+                  tcanOutput += `- Tiệm cận xiên: y = x ${y_tcx_}`; // x = 1
+            } else if ( Math.abs(a_tcx + 1) < 1e-9 ) {
+                  tcanOutput += `- Tiệm cận xiên: y = - x ${y_tcx_}`; // x = -1
+            } else { 
+                  tcanOutput += `- Tiệm cận xiên: y = ${toFraction(a_tcx, 1)} x ${y_tcx_}`;}
+        } else {
+             tcanOutput += `- Tiệm cận ngang: y = 0 `;
+        }
+
+        solutionDisplay.innerHTML += tcanOutput;
         return;
      } else {
         solutionDisplay.textContent = "Chức năng sắp có, coming soon";
      }
-     otherDisplay.textContent = "Thử nhiều chức năng khác nhé !!!";
+     otherDisplay.innerHTML += `<br>Thử nhiều chức năng khác nhé !!!`;
 
 })
 
@@ -444,8 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const numSelect = document.getElementById('numSelect'); 
 
     if (typeSelect) {
-        window.updateMainUI(typeSelect.value);
-    }
+        window.updateMainUI(typeSelect.value);}
     
     if (typeSelect) {
         typeSelect.addEventListener('change', (event) => {
@@ -457,9 +644,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (numSelect) {
          numSelect.addEventListener('change', (event) => {
             clear();
-            if (typeSelect.value === "10") {
-                window.updateEquationUI(event.target.value);
-            }
+            if (typeSelect.value === "10" || typeSelect.value === "20"  ) {
+                window.updateEquationUI(event.target.value);}
          });
     }
 });
